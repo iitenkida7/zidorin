@@ -8,7 +8,17 @@ export interface Filter {
   apply: (ctx: CanvasRenderingContext2D, width: number, height: number) => void | Promise<void>
 }
 
-export type FilterId = 'none' | 'monochrome' | 'vivid' | 'cloud' | 'sparkle' | 'dogface' | 'eyesemoji' | 'makeup' | 'background' | 'agegender'
+export type FilterId = 'none' | 'monochrome' | 'vivid' | 'cloud' | 'sparkle' | 'dogface' | 'eyesemoji' | 'makeup' | 'background' | 'agegender' |
+  // New color filters
+  'rainbow' | 'neon' | 'vintage' | 'thermal' | 'cyberpunk' |
+  // New decorate filters  
+  'confetti' | 'sakura' | 'matrix' | 'bubble' | 'snow' |
+  // New face filters
+  'angelhalo' | 'roboteyes' | 'catears' | 'crown' | 'magiccircle' |
+  // New background filters
+  'galaxy' | 'underwater' | 'citynight' | 'forestmagic' | 'retrowave' |
+  // New special filters
+  'emotion' | 'colorpalette' | 'motiontracker' | 'objectdetector' | 'aiartist'
 
 export const categoryInfo: Record<FilterCategory, { name: string; icon: string }> = {
   basic: { name: 'きほん', icon: '🎨' },
