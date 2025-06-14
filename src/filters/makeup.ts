@@ -56,12 +56,15 @@ export class MakeupFilter implements Filter {
         const face = faces[0]
         const keypoints = face.keypoints
         
-        // 必要なランドマークを取得
-        const leftEye = keypoints.find((p: any) => p.name === 'leftEye')
-        const rightEye = keypoints.find((p: any) => p.name === 'rightEye')
-        const noseTip = keypoints.find((p: any) => p.name === 'noseTip')
-        const leftMouth = keypoints.find((p: any) => p.name === 'leftMouth')
-        const rightMouth = keypoints.find((p: any) => p.name === 'rightMouth')
+        if (keypoints && keypoints.length > 0) {
+          // MediaPipe Face Meshのkeypoint indices
+          const leftEye = keypoints[33]   // 左目
+          const rightEye = keypoints[263] // 右目
+          const noseTip = keypoints[1]    // 鼻先
+          const leftMouth = keypoints[61] // 口の左端
+          const rightMouth = keypoints[291] // 口の右端
+          
+          console.log('Makeup filter - keypoints found:', { leftEye, rightEye, noseTip, leftMouth, rightMouth })
         
         if (leftEye && rightEye && noseTip && leftMouth && rightMouth) {
           const eyeDistance = Math.sqrt(
@@ -154,6 +157,7 @@ export class MakeupFilter implements Filter {
           ctx.fill()
           
           ctx.restore()
+          }
         }
       }
     } catch (error) {
