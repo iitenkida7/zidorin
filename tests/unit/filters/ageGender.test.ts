@@ -22,9 +22,9 @@ describe('AgeGenderFilter', () => {
   })
 
   it('should have correct properties', () => {
-    expect(filter.id).toBe('ageGender')
+    expect(filter.id).toBe('agegender')
     expect(filter.name).toBe('年齢・性別')
-    expect(filter.icon).toBe('🔍')
+    expect(filter.icon).toBe('🧠')
   })
 
   it('should load face detector when applying filter', async () => {

@@ -22,11 +22,11 @@ describe('Filters Index', () => {
     expect(filterIds).toContain('vivid')
     expect(filterIds).toContain('cloud')
     expect(filterIds).toContain('sparkle')
-    expect(filterIds).toContain('dogFace')
-    expect(filterIds).toContain('eyesEmoji')
+    expect(filterIds).toContain('dogface')
+    expect(filterIds).toContain('eyesemoji')
     expect(filterIds).toContain('makeup')
     expect(filterIds).toContain('background')
-    expect(filterIds).toContain('ageGender')
+    expect(filterIds).toContain('agegender')
   })
 
   it('should return correct filter by id', () => {
