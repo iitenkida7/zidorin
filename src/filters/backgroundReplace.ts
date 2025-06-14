@@ -46,7 +46,11 @@ export class BackgroundReplaceFilter implements Filter {
     videoCtx.putImageData(imageData, 0, 0)
     
     try {
-      const segmentation = await this.segmenter.segmentPeople(video)
+      const segmentation = await this.segmenter.segmentPeople(video, {
+        multiSegmentation: false,
+        segmentBodyParts: false,
+        flipHorizontal: false
+      })
       
       if (segmentation.length > 0) {
         const mask = segmentation[0].mask
@@ -67,14 +71,27 @@ export class BackgroundReplaceFilter implements Filter {
         const newImageData = ctx.getImageData(0, 0, width, height)
         const newData = newImageData.data
         
+        // マスクデータを平滑化してエッジを改善
+        const smoothedMask = this.smoothMask(maskData.data, width, height)
+        
         for (let i = 0; i < maskData.data.length; i += 4) {
-          const maskValue = maskData.data[i]
+          const maskValue = smoothedMask[i / 4]
+          const alpha = maskValue / 255
           
-          if (maskValue > 128) { // 人物の部分
+          if (alpha > 0.1) { // 人物の部分（ソフトブレンディング）
             const pixelIndex = i
-            newData[pixelIndex] = originalData[pixelIndex]
-            newData[pixelIndex + 1] = originalData[pixelIndex + 1]
-            newData[pixelIndex + 2] = originalData[pixelIndex + 2]
+            
+            // エッジ部分でのアルファブレンディング
+            if (alpha < 0.9) {
+              newData[pixelIndex] = Math.round(originalData[pixelIndex] * alpha + newData[pixelIndex] * (1 - alpha))
+              newData[pixelIndex + 1] = Math.round(originalData[pixelIndex + 1] * alpha + newData[pixelIndex + 1] * (1 - alpha))
+              newData[pixelIndex + 2] = Math.round(originalData[pixelIndex + 2] * alpha + newData[pixelIndex + 2] * (1 - alpha))
+            } else {
+              // 完全に人物の部分
+              newData[pixelIndex] = originalData[pixelIndex]
+              newData[pixelIndex + 1] = originalData[pixelIndex + 1]
+              newData[pixelIndex + 2] = originalData[pixelIndex + 2]
+            }
             newData[pixelIndex + 3] = originalData[pixelIndex + 3]
           }
         }
@@ -116,5 +133,39 @@ export class BackgroundReplaceFilter implements Filter {
       }
       img.src = this.backgrounds[this.currentBgIndex]
     })
+  }
+  
+  private smoothMask(maskData: Uint8ClampedArray, width: number, height: number): Uint8Array {
+    const smoothed = new Uint8Array(width * height)
+    const radius = 3 // ぼかし半径を増加
+    
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = y * width + x
+        let sum = 0
+        let count = 0
+        
+        // ガウシアンブラーのような効果を適用
+        for (let dy = -radius; dy <= radius; dy++) {
+          for (let dx = -radius; dx <= radius; dx++) {
+            const ny = y + dy
+            const nx = x + dx
+            
+            if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+              const neighborIndex = ny * width + nx
+              const distance = Math.sqrt(dx * dx + dy * dy)
+              const weight = Math.exp(-(distance * distance) / (2 * radius * radius))
+              
+              sum += maskData[neighborIndex * 4] * weight
+              count += weight
+            }
+          }
+        }
+        
+        smoothed[index] = Math.round(sum / count)
+      }
+    }
+    
+    return smoothed
   }
 }

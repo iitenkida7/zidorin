@@ -5,6 +5,7 @@ export class FilterSelector {
   private container: HTMLElement | null = null
   private selectedFilter: FilterId = 'none'
   private onChange: ((filterId: FilterId) => void) | null = null
+  private loadingFilters: Set<FilterId> = new Set()
   
   mount(container: HTMLElement): void {
     this.container = container
@@ -34,6 +35,9 @@ export class FilterSelector {
                   <span class="text-sm flex-shrink-0">${filter.icon}</span>
                   <span class="text-xs text-gray-700 leading-tight truncate w-full text-center hidden sm:block">${filter.name}</span>
                 </div>
+                <div id="loading-${filter.id}" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg" style="display: none;">
+                  <div class="animate-spin rounded-full h-4 w-4 border-2 border-pink-500 border-t-transparent"></div>
+                </div>
               </button>
             `).join('')}
           </div>
@@ -58,6 +62,7 @@ export class FilterSelector {
           this.render()
           
           if (this.onChange) {
+            this.showLoading(filterId)
             this.onChange(filterId)
           }
         }
@@ -67,5 +72,23 @@ export class FilterSelector {
   
   onFilterChange(callback: (filterId: FilterId) => void): void {
     this.onChange = callback
+  }
+  
+  showLoading(filterId: FilterId): void {
+    if (filterId === 'none') return // 'なし'フィルターはローディング不要
+    
+    this.loadingFilters.add(filterId)
+    const loadingElement = document.getElementById(`loading-${filterId}`)
+    if (loadingElement) {
+      loadingElement.style.display = 'flex'
+    }
+  }
+  
+  hideLoading(filterId: FilterId): void {
+    this.loadingFilters.delete(filterId)
+    const loadingElement = document.getElementById(`loading-${filterId}`)
+    if (loadingElement) {
+      loadingElement.style.display = 'none'
+    }
   }
 }

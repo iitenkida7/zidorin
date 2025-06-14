@@ -29,7 +29,7 @@ export class App {
           <p id="subtitle" class="text-pink-500 mt-2 transition-all duration-300">かわいい自撮りカメラ</p>
         </header>
         
-        <div id="camera-section" class="fixed top-20 left-0 right-0 z-10 px-4">
+        <div id="camera-section" class="fixed top-24 left-0 right-0 z-10 px-4">
           <div class="max-w-4xl mx-auto">
             <div class="relative">
               <div id="camera-container" class="h-96"></div>
@@ -38,7 +38,7 @@ export class App {
           </div>
         </div>
         
-        <main class="pt-[500px] px-4 pb-8">
+        <main class="pt-[520px] px-4 pb-8">
           <div class="max-w-4xl mx-auto w-full">
             <div id="filter-container" class="mb-6"></div>
           </div>
@@ -66,6 +66,11 @@ export class App {
   private setupEventListeners(): void {
     this.filterSelector.onFilterChange((filterId) => {
       this.camera.setFilter(filterId)
+      
+      // 少し遅延してローディングを非表示（フィルター読み込み完了を想定）
+      setTimeout(() => {
+        this.filterSelector.hideLoading(filterId)
+      }, 1500) // 1.5秒後にローディングを非表示
     })
     
     this.controls.onCapture(() => {
@@ -111,7 +116,7 @@ export class App {
         title.className = 'text-4xl font-bold text-pink-600 transition-all duration-300'
         subtitle.style.display = 'block'
         if (cameraSection) {
-          cameraSection.className = 'fixed top-20 left-0 right-0 z-10 px-4'
+          cameraSection.className = 'fixed top-24 left-0 right-0 z-10 px-4'
         }
       }
     })
