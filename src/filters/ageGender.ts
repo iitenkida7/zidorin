@@ -6,6 +6,7 @@ export class AgeGenderFilter implements Filter {
   id = 'agegender' as const
   name = '年齢・性別'
   icon = '🧠'
+  category = 'special' as const
   private faceDetector: FaceDetector | null = null
   private isLoading = false
   private estimationHistory: Array<{age: number, gender: string}> = []

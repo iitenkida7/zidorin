@@ -1,4 +1,4 @@
-import { Filter, FilterId } from '../types/filter'
+import { Filter, FilterId, FilterCategory } from '../types/filter'
 import { MonochromeFilter } from './monochrome'
 import { VividFilter } from './vivid'
 import { CloudFilter } from './cloud'
@@ -14,6 +14,7 @@ const filters: Filter[] = [
     id: 'none',
     name: 'なし',
     icon: '🎨',
+    category: 'basic' as FilterCategory,
     apply: () => { }
   },
   new MonochromeFilter(),
@@ -33,4 +34,22 @@ export function getFilter(id: FilterId): Filter | undefined {
 
 export function getAllFilters(): Filter[] {
   return filters
+}
+
+export function getFiltersByCategory(category: FilterCategory): Filter[] {
+  return filters.filter(filter => filter.category === category)
+}
+
+export function getCategorizedFilters(): Map<FilterCategory, Filter[]> {
+  const categorized = new Map<FilterCategory, Filter[]>()
+  
+  filters.forEach(filter => {
+    const category = filter.category
+    if (!categorized.has(category)) {
+      categorized.set(category, [])
+    }
+    categorized.get(category)!.push(filter)
+  })
+  
+  return categorized
 }

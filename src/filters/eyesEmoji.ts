@@ -6,6 +6,7 @@ export class EyesEmojiFilter implements Filter {
   id = 'eyesemoji' as const
   name = '目が👀'
   icon = '👀'
+  category = 'face' as const
   private faceDetector: FaceDetector | null = null
   private isLoading = false
   

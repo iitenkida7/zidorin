@@ -4,6 +4,7 @@ export class VividFilter implements Filter {
   id = 'vivid' as const
   name = 'ビビット'
   icon = '🌈'
+  category = 'color' as const
   
   apply(ctx: CanvasRenderingContext2D, width: number, height: number): void {
     const imageData = ctx.getImageData(0, 0, width, height)

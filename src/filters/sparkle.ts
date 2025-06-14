@@ -4,6 +4,7 @@ export class SparkleFilter implements Filter {
   id = 'sparkle' as const
   name = 'キラキラ'
   icon = '✨'
+  category = 'decorate' as const
   private sparkles: Array<{ x: number; y: number; size: number; opacity: number }> = []
   
   apply(ctx: CanvasRenderingContext2D, width: number, height: number): void {

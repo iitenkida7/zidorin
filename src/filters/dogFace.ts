@@ -6,6 +6,7 @@ export class DogFaceFilter implements Filter {
   id = 'dogface' as const
   name = '犬顔'
   icon = '🐶'
+  category = 'face' as const
   private faceDetector: FaceDetector | null = null
   private isLoading = false
   

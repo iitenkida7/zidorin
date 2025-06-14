@@ -6,6 +6,7 @@ export class BackgroundReplaceFilter implements Filter {
   id = 'background' as const
   name = '背景チェンジ'
   icon = '🌈'
+  category = 'background' as const
   private segmenter: BodySegmenter | null = null
   private isLoading = false
   private backgroundImage: HTMLImageElement | null = null

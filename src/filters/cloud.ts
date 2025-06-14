@@ -4,6 +4,7 @@ export class CloudFilter implements Filter {
   id = 'cloud' as const
   name = '雲の中'
   icon = '☁️'
+  category = 'decorate' as const
   
   apply(ctx: CanvasRenderingContext2D, width: number, height: number): void {
     const imageData = ctx.getImageData(0, 0, width, height)

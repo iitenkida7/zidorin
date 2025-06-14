@@ -6,6 +6,7 @@ export class MakeupFilter implements Filter {
   id = 'makeup' as const
   name = 'メイクアップ'
   icon = '💄'
+  category = 'face' as const
   private faceDetector: FaceDetector | null = null
   private isLoading = false
   

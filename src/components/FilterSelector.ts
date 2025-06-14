@@ -1,5 +1,5 @@
-import { FilterId } from '../types/filter'
-import { getAllFilters } from '../filters'
+import { FilterId, categoryInfo } from '../types/filter'
+import { getCategorizedFilters } from '../filters'
 
 export class FilterSelector {
   private container: HTMLElement | null = null
@@ -15,31 +15,49 @@ export class FilterSelector {
   private render(): void {
     if (!this.container) return
     
-    const filters = getAllFilters()
+    const categorizedFilters = getCategorizedFilters()
+    const categoryOrder = ['basic', 'color', 'decorate', 'face', 'background', 'special'] as const
     
     this.container.innerHTML = `
       <div class="bg-white rounded-2xl shadow-lg">
-        <div class="p-2">
-          <h2 class="text-xs font-bold text-pink-600 text-center mb-2">フィルターを選ぼう！</h2>
-          <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1">
-            ${filters.map(filter => `
-              <button
-                data-filter-id="${filter.id}"
-                class="filter-button relative aspect-square rounded-lg border transition-all duration-200 ${
-                  filter.id === this.selectedFilter
-                    ? 'border-pink-500 scale-105 shadow-lg border-2'
-                    : 'border-gray-200 hover:border-pink-300 hover:scale-105 border'
-                }"
-              >
-                <div class="absolute inset-0 flex flex-col items-center justify-center p-0.5 overflow-hidden">
-                  <span class="text-sm flex-shrink-0">${filter.icon}</span>
-                  <span class="text-xs text-gray-700 leading-tight truncate w-full text-center hidden sm:block">${filter.name}</span>
+        <div class="p-3">
+          <h2 class="text-sm font-bold text-pink-600 text-center mb-3">フィルターを選ぼう！</h2>
+          <div class="space-y-3">
+            ${categoryOrder.map(categoryKey => {
+              const filters = categorizedFilters.get(categoryKey) || []
+              if (filters.length === 0) return ''
+              
+              const category = categoryInfo[categoryKey]
+              return `
+                <div class="category-section">
+                  <div class="flex items-center mb-2 px-1">
+                    <span class="text-base mr-2 drop-shadow-sm">${category.icon}</span>
+                    <h3 class="text-xs font-semibold text-gray-700 tracking-wide">${category.name}</h3>
+                    <div class="flex-1 ml-2 h-px bg-gradient-to-r from-pink-200 to-transparent"></div>
+                  </div>
+                  <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1">
+                    ${filters.map(filter => `
+                      <button
+                        data-filter-id="${filter.id}"
+                        class="filter-button relative aspect-square rounded-xl border transition-all duration-200 bg-gradient-to-br from-white to-pink-50 ${
+                          filter.id === this.selectedFilter
+                            ? 'border-pink-400 scale-105 shadow-lg border-2 from-pink-50 to-pink-100'
+                            : 'border-gray-200 hover:border-pink-300 hover:scale-105 border hover:from-pink-25 hover:to-pink-75'
+                        }"
+                      >
+                        <div class="absolute inset-0 flex flex-col items-center justify-center p-0.5 overflow-hidden">
+                          <span class="text-sm flex-shrink-0">${filter.icon}</span>
+                          <span class="text-xs text-gray-700 leading-tight truncate w-full text-center hidden sm:block">${filter.name}</span>
+                        </div>
+                        <div id="loading-${filter.id}" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg" style="display: none;">
+                          <div class="animate-spin rounded-full h-4 w-4 border-2 border-pink-500 border-t-transparent"></div>
+                        </div>
+                      </button>
+                    `).join('')}
+                  </div>
                 </div>
-                <div id="loading-${filter.id}" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg" style="display: none;">
-                  <div class="animate-spin rounded-full h-4 w-4 border-2 border-pink-500 border-t-transparent"></div>
-                </div>
-              </button>
-            `).join('')}
+              `
+            }).filter(Boolean).join('')}
           </div>
         </div>
       </div>

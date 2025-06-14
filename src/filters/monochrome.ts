@@ -4,6 +4,7 @@ export class MonochromeFilter implements Filter {
   id = 'monochrome' as const
   name = 'モノクロ'
   icon = '⚫'
+  category = 'color' as const
   
   apply(ctx: CanvasRenderingContext2D, width: number, height: number): void {
     const imageData = ctx.getImageData(0, 0, width, height)
