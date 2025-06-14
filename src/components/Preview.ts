@@ -72,12 +72,9 @@ export class Preview {
     const instagramButton = document.getElementById('instagram-button')
     
     if (saveButton) {
-      saveButton.addEventListener('click', () => {
+      saveButton.addEventListener('click', async () => {
         if (this.imageData) {
-          const link = document.createElement('a')
-          link.download = `zidorin_${Date.now()}.png`
-          link.href = this.imageData
-          link.click()
+          await this.saveImage()
         }
         this.hide()
         if (this.onSaveCallback) {
@@ -108,5 +105,42 @@ export class Preview {
   
   onRetake(callback: () => void): void {
     this.onRetakeCallback = callback
+  }
+
+  private async saveImage(): Promise<void> {
+    if (!this.imageData) return
+
+    try {
+      // Convert data URL to blob
+      const response = await fetch(this.imageData)
+      const blob = await response.blob()
+      
+      // Check if Web Share API is supported (iOS Safari)
+      if (navigator.share && navigator.canShare) {
+        const file = new File([blob], `zidorin_${Date.now()}.png`, { type: 'image/png' })
+        
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'Zidorin Photo',
+            text: 'My cute selfie from Zidorin!'
+          })
+          return
+        }
+      }
+      
+      // Fallback to download for non-iOS or unsupported browsers
+      const link = document.createElement('a')
+      link.download = `zidorin_${Date.now()}.png`
+      link.href = this.imageData
+      link.click()
+    } catch (error) {
+      console.error('Save failed:', error)
+      // Fallback to download
+      const link = document.createElement('a')
+      link.download = `zidorin_${Date.now()}.png`
+      link.href = this.imageData
+      link.click()
+    }
   }
 }
