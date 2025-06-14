@@ -75,7 +75,8 @@ export class OilFilter implements Filter {
     }
     
     // Apply the oil painting effect
-    const newImageData = new ImageData(outputData, width, height)
+    const newImageData = ctx.createImageData(width, height)
+    newImageData.data.set(outputData)
     ctx.putImageData(newImageData, 0, 0)
     
     // Add texture overlay

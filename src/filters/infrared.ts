@@ -78,7 +78,14 @@ export class InfraredFilter implements Filter {
     // Add border to temperature bar
     ctx.strokeStyle = 'white'
     ctx.lineWidth = 2
-    ctx.strokeRect(barX, barY, barWidth, barHeight)
+    if (ctx.strokeRect) {
+      ctx.strokeRect(barX, barY, barWidth, barHeight)
+    } else {
+      // Fallback for test environment
+      ctx.beginPath()
+      ctx.rect(barX, barY, barWidth, barHeight)
+      ctx.stroke()
+    }
     
     // Add temperature labels
     ctx.fillStyle = 'white'
