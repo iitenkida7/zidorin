@@ -20,16 +20,19 @@ describe('ModelLoader', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     // modelLoaderのキャッシュをクリア
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(modelLoader as any).models = {
       faceDetector: null,
       segmenter: null
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(modelLoader as any).loadingPromises = new Map()
   })
 
   it('should load face detector', async () => {
     const mockFaceDetector = { estimateFaces: vi.fn() }
     const faceLandmarksDetection = await import('@tensorflow-models/face-landmarks-detection')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.mocked(faceLandmarksDetection.createDetector).mockResolvedValue(mockFaceDetector as any)
 
     const faceDetector = await modelLoader.getFaceDetector()
@@ -47,6 +50,7 @@ describe('ModelLoader', () => {
   it('should load segmenter', async () => {
     const mockSegmenter = { segmentPeople: vi.fn() }
     const bodySegmentation = await import('@tensorflow-models/body-segmentation')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.mocked(bodySegmentation.createSegmenter).mockResolvedValue(mockSegmenter as any)
 
     const segmenter = await modelLoader.getSegmenter()
@@ -64,6 +68,7 @@ describe('ModelLoader', () => {
   it('should cache loaded models', async () => {
     const mockFaceDetector = { estimateFaces: vi.fn() }
     const faceLandmarksDetection = await import('@tensorflow-models/face-landmarks-detection')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.mocked(faceLandmarksDetection.createDetector).mockResolvedValue(mockFaceDetector as any)
 
     // 最初の呼び出し

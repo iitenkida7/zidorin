@@ -1,11 +1,12 @@
 import { Filter } from '../types/filter'
 import { modelLoader } from '../utils/modelLoader'
+import { FaceDetector, FaceKeypoint } from '../types/tensorflow'
 
 export class EyesEmojiFilter implements Filter {
   id = 'eyesemoji' as const
   name = '目が👀'
   icon = '👀'
-  private faceDetector: any = null
+  private faceDetector: FaceDetector | null = null
   private isLoading = false
   
   async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
@@ -33,13 +34,13 @@ export class EyesEmojiFilter implements Filter {
     try {
       const faces = await this.faceDetector.estimateFaces(video)
       
-      if (faces.length > 0) {
+      if (faces && faces.length > 0) {
         const face = faces[0]
         const keypoints = face.keypoints
         
         // 左目と右目の位置を取得
-        const leftEye = keypoints.find((p: any) => p.name === 'leftEye')
-        const rightEye = keypoints.find((p: any) => p.name === 'rightEye')
+        const leftEye: FaceKeypoint = keypoints[33]  // MediaPipe Face Mesh left eye
+        const rightEye: FaceKeypoint = keypoints[263] // MediaPipe Face Mesh right eye
         
         if (leftEye && rightEye) {
           const eyeDistance = Math.sqrt(

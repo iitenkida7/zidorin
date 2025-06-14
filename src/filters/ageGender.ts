@@ -1,11 +1,12 @@
 import { Filter } from '../types/filter'
 import { modelLoader } from '../utils/modelLoader'
+import { Face, FaceDetector } from '../types/tensorflow'
 
 export class AgeGenderFilter implements Filter {
   id = 'agegender' as const
   name = '年齢・性別'
   icon = '🧠'
-  private faceDetector: any = null
+  private faceDetector: FaceDetector | null = null
   private isLoading = false
   private estimationHistory: Array<{age: number, gender: string}> = []
   
@@ -34,7 +35,7 @@ export class AgeGenderFilter implements Filter {
     try {
       const faces = await this.faceDetector.estimateFaces(video)
       
-      if (faces.length > 0) {
+      if (faces && faces.length > 0) {
         const face = faces[0]
         const keypoints = face.keypoints
         
@@ -61,10 +62,10 @@ export class AgeGenderFilter implements Filter {
         )
         
         // 顔の境界ボックスを計算
-        const minX = Math.min(...keypoints.map((p: any) => p.x))
-        const maxX = Math.max(...keypoints.map((p: any) => p.x))
-        const minY = Math.min(...keypoints.map((p: any) => p.y))
-        const maxY = Math.max(...keypoints.map((p: any) => p.y))
+        const minX = Math.min(...keypoints.map(p => p.x))
+        const maxX = Math.max(...keypoints.map(p => p.x))
+        const minY = Math.min(...keypoints.map(p => p.y))
+        // const _maxY = Math.max(...keypoints.map(p => p.y))
         
         // 結果を描画
         ctx.save()
@@ -86,7 +87,7 @@ export class AgeGenderFilter implements Filter {
     }
   }
   
-  private estimateAgeGender(keypoints: any[], imageData: ImageData, width: number, height: number): {age: number, gender: string} {
+  private estimateAgeGender(keypoints: Face['keypoints'], _imageData: ImageData, _width: number, _height: number): {age: number, gender: string} {
     // 簡易的な推定ロジック（実際のAIモデルの代替）
     
     // 顔の特徴点から基本的な測定値を計算

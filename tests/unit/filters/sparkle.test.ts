@@ -23,6 +23,7 @@ describe('SparkleFilter', () => {
     const height = 100
 
     // sparklesを初期化
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(filter as any).sparkles = [{ x: 50, y: 50, size: 10, opacity: 1 }]
 
     await filter.apply(mockCtx, width, height)
@@ -37,6 +38,7 @@ describe('SparkleFilter', () => {
     const height = 100
 
     // 複数のSparkを初期化
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(filter as any).sparkles = [
       { x: 30, y: 30, size: 10, opacity: 1 },
       { x: 70, y: 70, size: 8, opacity: 0.8 }
@@ -53,6 +55,7 @@ describe('SparkleFilter', () => {
     const height = 100
 
     // sparklesを初期化
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(filter as any).sparkles = [{ x: 50, y: 50, size: 10, opacity: 1 }]
 
     await filter.apply(mockCtx, width, height)

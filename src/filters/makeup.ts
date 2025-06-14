@@ -1,11 +1,12 @@
 import { Filter } from '../types/filter'
 import { modelLoader } from '../utils/modelLoader'
+import type { FaceDetector } from '../types/tensorflow'
 
 export class MakeupFilter implements Filter {
   id = 'makeup' as const
   name = 'メイクアップ'
   icon = '💄'
-  private faceDetector: any = null
+  private faceDetector: FaceDetector | null = null
   private isLoading = false
   
   async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
@@ -52,7 +53,7 @@ export class MakeupFilter implements Filter {
     try {
       const faces = await this.faceDetector.estimateFaces(video)
       
-      if (faces.length > 0) {
+      if (faces && faces.length > 0) {
         const face = faces[0]
         const keypoints = face.keypoints
         

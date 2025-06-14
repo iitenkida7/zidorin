@@ -1,11 +1,12 @@
 import { Filter } from '../types/filter'
 import { modelLoader } from '../utils/modelLoader'
+import type { BodySegmenter } from '../types/tensorflow'
 
 export class BackgroundReplaceFilter implements Filter {
   id = 'background' as const
   name = '背景チェンジ'
   icon = '🌈'
-  private segmenter: any = null
+  private segmenter: BodySegmenter | null = null
   private isLoading = false
   private backgroundImage: HTMLImageElement | null = null
   private currentBgIndex = 0

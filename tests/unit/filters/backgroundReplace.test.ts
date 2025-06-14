@@ -46,6 +46,7 @@ describe('BackgroundReplaceFilter', () => {
     const width = 100
     const height = 100
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(filter as any).isLoading = true
 
     await filter.apply(mockCtx, width, height)

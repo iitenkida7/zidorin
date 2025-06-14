@@ -47,6 +47,7 @@ describe('DogFaceFilter', () => {
     const height = 100
     
     // isLoadingをtrueに設定
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(filter as any).isLoading = true
 
     await filter.apply(mockCtx, width, height)

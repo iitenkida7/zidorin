@@ -76,6 +76,9 @@ vi.mock('@tensorflow-models/face-landmarks-detection', () => ({
   load: vi.fn().mockResolvedValue({
     estimateFaces: vi.fn().mockResolvedValue([]),
   }),
+  createDetector: vi.fn().mockResolvedValue({
+    estimateFaces: vi.fn().mockResolvedValue([]),
+  }),
   SupportedModels: {
     MediaPipeFaceMesh: 'MediaPipeFaceMesh',
   },
@@ -83,6 +86,9 @@ vi.mock('@tensorflow-models/face-landmarks-detection', () => ({
 
 vi.mock('@tensorflow-models/body-segmentation', () => ({
   load: vi.fn().mockResolvedValue({
+    segmentPeople: vi.fn().mockResolvedValue([]),
+  }),
+  createSegmenter: vi.fn().mockResolvedValue({
     segmentPeople: vi.fn().mockResolvedValue([]),
   }),
   SupportedModels: {

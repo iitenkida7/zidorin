@@ -31,7 +31,7 @@ describe('FilterSelector', () => {
     expect(buttons).toHaveLength(3)
 
     // フィルターボタンのアイコンとテキストをチェック
-    const noneButton = container.querySelector('[data-filter-id=\"none\"]')
+    const noneButton = container.querySelector('[data-filter-id=none]')
     expect(noneButton).toBeTruthy()
     expect(noneButton?.textContent).toContain('🎨')
     expect(noneButton?.textContent).toContain('なし')
@@ -42,7 +42,7 @@ describe('FilterSelector', () => {
     filterSelector.onFilterChange(onChangeMock)
     filterSelector.mount(container)
 
-    const monochromeButton = container.querySelector('[data-filter-id=\"monochrome\"]') as HTMLElement
+    const monochromeButton = container.querySelector('[data-filter-id=monochrome]') as HTMLElement
     expect(monochromeButton).toBeTruthy()
 
     monochromeButton.click()
@@ -61,7 +61,7 @@ describe('FilterSelector', () => {
     expect(loadingElement?.style.display).toBe('none')
   })
 
-  it('should not show loading for \"none\" filter', () => {
+  it('should not show loading for "none" filter', () => {
     filterSelector.mount(container)
 
     filterSelector.showLoading('none')
@@ -75,14 +75,14 @@ describe('FilterSelector', () => {
     filterSelector.onFilterChange(onChangeMock)
     filterSelector.mount(container)
 
-    const monochromeButton = container.querySelector('[data-filter-id=\"monochrome\"]') as HTMLElement
+    const monochromeButton = container.querySelector('[data-filter-id=monochrome]') as HTMLElement
     monochromeButton.click()
 
     // onChangeが呼ばれることを確認
     expect(onChangeMock).toHaveBeenCalledWith('monochrome')
     
     // 選択状態のクラスが適用されていることを確認
-    const updatedButton = container.querySelector('[data-filter-id=\"monochrome\"]') as HTMLElement
+    const updatedButton = container.querySelector('[data-filter-id=monochrome]') as HTMLElement
     expect(updatedButton.className).toContain('border-pink-500')
   })
 })

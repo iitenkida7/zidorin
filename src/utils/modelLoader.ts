@@ -3,10 +3,11 @@ import * as bodySegmentation from '@tensorflow-models/body-segmentation'
 import '@tensorflow/tfjs-backend-webgl'
 import '@mediapipe/face_mesh'
 import '@mediapipe/selfie_segmentation'
+import type { FaceDetector, BodySegmenter } from '../types/tensorflow'
 
 export interface Models {
-  faceDetector: faceLandmarksDetection.FaceLandmarksDetector | null
-  segmenter: bodySegmentation.BodySegmenter | null
+  faceDetector: FaceDetector | null
+  segmenter: BodySegmenter | null
 }
 
 class ModelLoader {
@@ -15,9 +16,9 @@ class ModelLoader {
     segmenter: null
   }
   
-  private loadingPromises: Map<string, Promise<any>> = new Map()
+  private loadingPromises: Map<string, Promise<FaceDetector | BodySegmenter>> = new Map()
   
-  async getFaceDetector(): Promise<faceLandmarksDetection.FaceLandmarksDetector> {
+  async getFaceDetector(): Promise<FaceDetector> {
     if (this.models.faceDetector) {
       return this.models.faceDetector
     }
@@ -31,7 +32,7 @@ class ModelLoader {
     return this.loadingPromises.get(key)!
   }
   
-  private async loadFaceDetector(): Promise<faceLandmarksDetection.FaceLandmarksDetector> {
+  private async loadFaceDetector(): Promise<FaceDetector> {
     const model = faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh
     const detectorConfig: faceLandmarksDetection.MediaPipeFaceMeshMediaPipeModelConfig = {
       runtime: 'mediapipe',
@@ -44,7 +45,7 @@ class ModelLoader {
     return this.models.faceDetector
   }
   
-  async getSegmenter(): Promise<bodySegmentation.BodySegmenter> {
+  async getSegmenter(): Promise<BodySegmenter> {
     if (this.models.segmenter) {
       return this.models.segmenter
     }
@@ -58,7 +59,7 @@ class ModelLoader {
     return this.loadingPromises.get(key)!
   }
   
-  private async loadSegmenter(): Promise<bodySegmentation.BodySegmenter> {
+  private async loadSegmenter(): Promise<BodySegmenter> {
     const model = bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation
     const segmenterConfig: bodySegmentation.MediaPipeSelfieSegmentationMediaPipeModelConfig = {
       runtime: 'mediapipe',

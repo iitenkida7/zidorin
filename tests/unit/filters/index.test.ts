@@ -44,6 +44,7 @@ describe('Filters Index', () => {
   })
 
   it('should return undefined for non-existent filter', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nonExistentFilter = getFilter('nonexistent' as any)
     expect(nonExistentFilter).toBeUndefined()
   })

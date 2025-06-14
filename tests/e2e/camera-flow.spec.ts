@@ -40,14 +40,14 @@ test.describe('Camera Flow', () => {
     await expect(page.locator('text=フィルターを選ぼう！')).toBeVisible()
     
     // フィルターボタンが表示されることを確認
-    await expect(page.locator('[data-filter-id=\"none\"]')).toBeVisible()
-    await expect(page.locator('[data-filter-id=\"monochrome\"]')).toBeVisible()
-    await expect(page.locator('[data-filter-id=\"vivid\"]')).toBeVisible()
+    await expect(page.locator('[data-filter-id=none]')).toBeVisible()
+    await expect(page.locator('[data-filter-id=monochrome]')).toBeVisible()
+    await expect(page.locator('[data-filter-id=vivid]')).toBeVisible()
   })
 
   test('should allow filter selection', async ({ page }) => {
     // モノクロフィルターを選択
-    const monochromeButton = page.locator('[data-filter-id=\"monochrome\"]')
+    const monochromeButton = page.locator('[data-filter-id=monochrome]')
     await monochromeButton.click()
     
     // 選択状態のスタイルが適用されることを確認
