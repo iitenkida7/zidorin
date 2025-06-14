@@ -43,7 +43,7 @@ services:
     command: sh -c "npm install && npm test"
 
   playwright:
-    image: mcr.microsoft.com/playwright:v1.40.0-focal
+    image: mcr.microsoft.com/playwright:v1.41.0-focal
     working_dir: /app
     volumes:
       - ./:/app
