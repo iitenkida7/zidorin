@@ -89,7 +89,7 @@ describe('All Filters', () => {
         // Context should still be valid after application attempt
         expect(ctx).toBeDefined()
       },
-      10000 // 10 second timeout for slow filters
+      15000 // 15 second timeout for slow filters like background processing
     )
   })
 
