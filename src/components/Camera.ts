@@ -98,14 +98,18 @@ export class Camera {
   }
   
   private startRendering(): void {
-    const render = () => {
+    const render = async () => {
       if (!this.video || !this.canvas || !this.ctx) return
       
       this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
       
       const filter = getFilter(this.currentFilter)
       if (filter) {
-        filter.apply(this.ctx, this.canvas.width, this.canvas.height)
+        try {
+          await filter.apply(this.ctx, this.canvas.width, this.canvas.height)
+        } catch (error) {
+          console.error('Filter application failed:', error)
+        }
       }
       
       this.animationId = requestAnimationFrame(render)
