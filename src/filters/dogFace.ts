@@ -9,12 +9,19 @@ export class DogFaceFilter implements Filter {
   private isLoading = false
   
   async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
-    if (this.isLoading) return
+    console.log('DogFace filter apply called')
+    
+    if (this.isLoading) {
+      console.log('Face detector is loading...')
+      return
+    }
     
     if (!this.faceDetector) {
+      console.log('Loading face detector...')
       this.isLoading = true
       try {
         this.faceDetector = await modelLoader.getFaceDetector()
+        console.log('Face detector loaded successfully')
       } catch (error) {
         console.error('Face detector loading failed:', error)
         this.isLoading = false
@@ -31,49 +38,52 @@ export class DogFaceFilter implements Filter {
     videoCtx.putImageData(imageData, 0, 0)
     
     try {
+      console.log('Estimating faces...')
       const faces = await this.faceDetector.estimateFaces(video)
+      console.log(`Found ${faces.length} faces`)
       
       if (faces.length > 0) {
         const face = faces[0]
+        console.log('Face keypoints:', face.keypoints?.length || 0)
+        
+        // MediaPipe Face Meshの場合、keypointsは数値インデックスでアクセス
         const keypoints = face.keypoints
-        
-        // 顔の中心と大きさを計算
-        const leftEye = keypoints.find((p: any) => p.name === 'leftEye')
-        const rightEye = keypoints.find((p: any) => p.name === 'rightEye')
-        const noseTip = keypoints.find((p: any) => p.name === 'noseTip')
-        
-        if (leftEye && rightEye && noseTip) {
-          const eyeDistance = Math.sqrt(
-            Math.pow(rightEye.x - leftEye.x, 2) + 
-            Math.pow(rightEye.y - leftEye.y, 2)
-          )
+        if (keypoints && keypoints.length > 0) {
+          // 左目: index 33, 右目: index 263, 鼻先: index 1
+          const leftEye = keypoints[33]
+          const rightEye = keypoints[263] 
+          const noseTip = keypoints[1]
           
-          const centerX = (leftEye.x + rightEye.x) / 2
-          const centerY = noseTip.y - eyeDistance * 0.5
-          const size = eyeDistance * 2.5
+          console.log('Keypoints found:', { leftEye, rightEye, noseTip })
           
-          // 顔を隠すために元の画像をぼかす
-          ctx.filter = 'blur(20px)'
-          ctx.drawImage(
-            ctx.canvas,
-            centerX - size / 2,
-            centerY - size / 2,
-            size,
-            size,
-            centerX - size / 2,
-            centerY - size / 2,
-            size,
-            size
-          )
-          ctx.filter = 'none'
-          
-          // 犬の絵文字を描画
-          ctx.save()
-          ctx.font = `${size}px Arial`
-          ctx.textAlign = 'center'
-          ctx.textBaseline = 'middle'
-          ctx.fillText('🐶', centerX, centerY)
-          ctx.restore()
+          if (leftEye && rightEye && noseTip) {
+            const eyeDistance = Math.sqrt(
+              Math.pow(rightEye.x - leftEye.x, 2) + 
+              Math.pow(rightEye.y - leftEye.y, 2)
+            )
+            
+            const centerX = (leftEye.x + rightEye.x) / 2
+            const centerY = (leftEye.y + rightEye.y) / 2
+            const size = eyeDistance * 3.5
+            
+            console.log('Drawing dog face at:', { centerX, centerY, size })
+            
+            // 背景色を描画（透過を防ぐため）
+            ctx.save()
+            ctx.fillStyle = '#FFFFFF'
+            ctx.beginPath()
+            ctx.arc(centerX, centerY, size / 2, 0, 2 * Math.PI)
+            ctx.fill()
+            ctx.restore()
+            
+            // 犬の絵文字を描画
+            ctx.save()
+            ctx.font = `${size}px Arial`
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+            ctx.fillText('🐶', centerX, centerY)
+            ctx.restore()
+          }
         }
       }
     } catch (error) {

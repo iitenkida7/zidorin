@@ -31,9 +31,11 @@ export class App {
         
         <main class="container mx-auto px-4 pb-8">
           <div class="max-w-4xl mx-auto">
-            <div id="camera-container" class="mb-6"></div>
+            <div class="relative">
+              <div id="camera-container" class="mb-6"></div>
+              <div id="controls-container" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10"></div>
+            </div>
             <div id="filter-container" class="mb-6"></div>
-            <div id="controls-container"></div>
           </div>
         </main>
       </div>

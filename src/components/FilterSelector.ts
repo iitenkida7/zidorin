@@ -17,20 +17,20 @@ export class FilterSelector {
     const filters = getAllFilters()
     
     this.container.innerHTML = `
-      <div class="bg-white rounded-2xl shadow-lg p-4">
-        <h2 class="text-xl font-bold text-pink-600 mb-4 text-center">フィルターを選ぼう！</h2>
-        <div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
+      <div class="bg-white rounded-2xl shadow-lg p-2">
+        <h2 class="text-sm font-bold text-pink-600 mb-2 text-center">フィルターを選ぼう！</h2>
+        <div class="grid grid-cols-6 sm:grid-cols-10 gap-2">
           ${filters.map(filter => `
             <button
               data-filter-id="${filter.id}"
-              class="filter-button relative aspect-square rounded-xl border-4 transition-all duration-200 ${
+              class="filter-button relative aspect-square rounded-lg border-2 transition-all duration-200 ${
                 filter.id === this.selectedFilter
                   ? 'border-pink-500 scale-110 shadow-lg'
                   : 'border-gray-200 hover:border-pink-300 hover:scale-105'
               }"
             >
-              <div class="absolute inset-0 flex flex-col items-center justify-center p-2">
-                <span class="text-2xl mb-1">${filter.icon}</span>
+              <div class="absolute inset-0 flex flex-col items-center justify-center p-1">
+                <span class="text-sm mb-0.5">${filter.icon}</span>
                 <span class="text-xs text-gray-700">${filter.name}</span>
               </div>
             </button>
