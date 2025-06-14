@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Camera Flow', () => {
-  test.beforeEach(async ({ page }) => {
-    // カメラ許可のモック
-    await page.context().grantPermissions(['camera'])
+  test.beforeEach(async ({ page, browserName }) => {
+    // カメラ許可のモック（Webkitは除外）
+    if (browserName !== 'webkit') {
+      await page.context().grantPermissions(['camera'])
+    }
     
     // getUserMediaのモック
     await page.addInitScript(() => {
@@ -26,7 +28,7 @@ test.describe('Camera Flow', () => {
   test('should display the app title and camera interface', async ({ page }) => {
     // タイトルの確認
     await expect(page.locator('h1')).toContainText('zidorin')
-    await expect(page.locator('p')).toContainText('かわいい自撮りカメラ')
+    await expect(page.locator('#subtitle')).toContainText('かわいい自撮りカメラ')
 
     // カメラコンテナが存在することを確認
     await expect(page.locator('#camera-container')).toBeVisible()

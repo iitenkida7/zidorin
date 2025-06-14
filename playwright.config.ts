@@ -11,6 +11,11 @@ export default defineConfig({
     baseURL: 'http://localhost:8000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+  },
+  timeout: 30000,
+  expect: {
+    timeout: 5000,
   },
 
   projects: [
@@ -36,9 +41,9 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
+  webServer: process.env.CI ? undefined : {
     command: 'npm run dev',
     url: 'http://localhost:8000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
   },
 })
