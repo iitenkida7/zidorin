@@ -15,7 +15,6 @@ export class Camera {
   mount(container: HTMLElement): void {
     this.container = container
     this.render()
-    this.checkAvailableCameras()
     this.initCamera()
   }
   
@@ -77,6 +76,8 @@ export class Camera {
             await this.video!.play()
             this.setupCanvas()
             this.hideLoading()
+            // Check available cameras after successful camera init
+            this.checkAvailableCameras()
             // Add small delay for iOS stability
             setTimeout(() => {
               this.startRendering()
@@ -180,13 +181,31 @@ export class Camera {
   
   private async checkAvailableCameras(): Promise<void> {
     try {
+      // On iOS, need camera permission first before enumerateDevices returns device labels
       const devices = await navigator.mediaDevices.enumerateDevices()
       this.availableCameras = devices.filter(device => device.kind === 'videoinput')
       
-      // Show camera switch button if multiple cameras available
+      console.log('Available cameras:', this.availableCameras.length, this.availableCameras)
+      
+      // Detect if we're on mobile device (likely has multiple cameras)
+      const isMobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent) || 
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+      
+      // Show camera switch button if multiple cameras available OR on mobile with at least one camera
       const switchButton = document.getElementById('camera-switch-button')
-      if (switchButton && this.availableCameras.length > 1) {
-        switchButton.style.display = 'block'
+      if (switchButton) {
+        const shouldShowButton = this.availableCameras.length > 1 || 
+          (isMobile && this.availableCameras.length >= 1)
+        
+        if (shouldShowButton) {
+          console.log('Showing camera switch button (mobile device detected)')
+          switchButton.style.display = 'block'
+        } else {
+          console.log('Only one camera available, hiding switch button')
+          switchButton.style.display = 'none'
+        }
+      } else {
+        console.error('Camera switch button element not found')
       }
     } catch (error) {
       console.error('Failed to enumerate cameras:', error)
@@ -203,18 +222,35 @@ export class Camera {
   }
 
   private async switchCamera(): Promise<void> {
-    if (this.availableCameras.length <= 1) return
-
-    // Stop current stream
-    if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop())
+    console.log('Switching camera, current mode:', this.currentFacingMode)
+    
+    // Try to switch even if we only detected one camera (mobile fallback)
+    const isMobile = /iPad|iPhone|iPod|Android/.test(navigator.userAgent) || 
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    
+    if (!isMobile && this.availableCameras.length <= 1) {
+      console.log('Not switching camera: only one camera available on desktop')
+      return
     }
 
-    // Toggle facing mode
-    this.currentFacingMode = this.currentFacingMode === 'user' ? 'environment' : 'user'
+    try {
+      // Stop current stream
+      if (this.stream) {
+        this.stream.getTracks().forEach(track => track.stop())
+      }
 
-    // Restart camera with new facing mode
-    await this.initCamera()
+      // Toggle facing mode
+      const newFacingMode = this.currentFacingMode === 'user' ? 'environment' : 'user'
+      console.log('Switching to facing mode:', newFacingMode)
+      this.currentFacingMode = newFacingMode
+
+      // Restart camera with new facing mode
+      await this.initCamera()
+    } catch (error) {
+      console.error('Failed to switch camera:', error)
+      // If switching fails, revert to previous mode
+      this.currentFacingMode = this.currentFacingMode === 'user' ? 'environment' : 'user'
+    }
   }
 
   destroy(): void {
