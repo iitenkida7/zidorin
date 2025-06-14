@@ -13,7 +13,7 @@ describe('Filters Index', () => {
   it('should return all available filters', () => {
     const filters = getAllFilters()
     
-    expect(filters).toHaveLength(46) // 合計46個のフィルター (9 original + 36 new + 1 none filter)
+    expect(filters).toHaveLength(51) // 合計51個のフィルター (9 original + 36 new + 1 none filter + 5 sharp effects)
     
     // 基本フィルターのIDをチェック
     const filterIds = filters.map(f => f.id)

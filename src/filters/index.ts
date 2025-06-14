@@ -54,6 +54,11 @@ import { MotionTrackerFilter } from './motionTracker'
 import { ObjectDetectorFilter } from './objectDetector'
 import { AIArtistFilter } from './aiArtist'
 import { SpyFilter } from './spy'
+import { XRayFilter } from './xray'
+import { GlitchFilter } from './glitch'
+import { OilFilter } from './oil'
+import { InfraredFilter } from './infrared'
+import { CartoonFilter } from './cartoon'
 
 const filters: Filter[] = [
   {
@@ -119,6 +124,11 @@ const filters: Filter[] = [
   new ObjectDetectorFilter(),
   new AIArtistFilter(),
   new SpyFilter(),
+  new XRayFilter(),
+  new GlitchFilter(),
+  new OilFilter(),
+  new InfraredFilter(),
+  new CartoonFilter(),
 ]
 
 export function getFilter(id: FilterId): Filter | undefined {
