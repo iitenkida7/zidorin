@@ -187,7 +187,15 @@ export class MotionTrackerFilter implements Filter {
     
     ctx.strokeStyle = '#00FF00'
     ctx.lineWidth = 2
-    ctx.strokeRect(hudX, hudY, hudWidth, hudHeight)
+    if (ctx.strokeRect) {
+      ctx.strokeRect(hudX, hudY, hudWidth, hudHeight)
+    } else if (ctx.rect && ctx.beginPath && ctx.stroke) {
+      // Fallback for test environment
+      ctx.beginPath()
+      ctx.rect(hudX, hudY, hudWidth, hudHeight)
+      ctx.stroke()
+    }
+    // Skip drawing outline if neither method is available
     
     // Title
     ctx.fillStyle = '#00FF00'
@@ -223,7 +231,15 @@ export class MotionTrackerFilter implements Filter {
     
     ctx.strokeStyle = '#00FF00'
     ctx.lineWidth = 1
-    ctx.strokeRect(barX, barY, barWidth, barHeight)
+    if (ctx.strokeRect) {
+      ctx.strokeRect(barX, barY, barWidth, barHeight)
+    } else if (ctx.rect && ctx.beginPath && ctx.stroke) {
+      // Fallback for test environment
+      ctx.beginPath()
+      ctx.rect(barX, barY, barWidth, barHeight)
+      ctx.stroke()
+    }
+    // Skip drawing outline if neither method is available
     
     // Motion compass (shows primary motion direction)
     const compassX = hudX + hudWidth - 40

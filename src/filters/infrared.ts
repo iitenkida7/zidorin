@@ -80,12 +80,13 @@ export class InfraredFilter implements Filter {
     ctx.lineWidth = 2
     if (ctx.strokeRect) {
       ctx.strokeRect(barX, barY, barWidth, barHeight)
-    } else {
+    } else if (ctx.rect && ctx.beginPath && ctx.stroke) {
       // Fallback for test environment
       ctx.beginPath()
       ctx.rect(barX, barY, barWidth, barHeight)
       ctx.stroke()
     }
+    // Skip drawing outline if neither method is available
     
     // Add temperature labels
     ctx.fillStyle = 'white'

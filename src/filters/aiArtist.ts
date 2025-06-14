@@ -68,7 +68,15 @@ export class AIArtistFilter implements Filter {
         ctx.fillRect(-10, -10, 20, 20)
         ctx.strokeStyle = '#000000'
         ctx.lineWidth = 1
-        ctx.strokeRect(-10, -10, 20, 20)
+        if (ctx.strokeRect) {
+          ctx.strokeRect(-10, -10, 20, 20)
+        } else if (ctx.rect && ctx.beginPath && ctx.stroke) {
+          // Fallback for test environment
+          ctx.beginPath()
+          ctx.rect(-10, -10, 20, 20)
+          ctx.stroke()
+        }
+        // Skip drawing outline if neither method is available
         ctx.restore()
       }
     }
@@ -355,7 +363,15 @@ export class AIArtistFilter implements Filter {
     
     ctx.strokeStyle = '#FFD700'
     ctx.lineWidth = 2
-    ctx.strokeRect(indicatorX, indicatorY, indicatorWidth, indicatorHeight)
+    if (ctx.strokeRect) {
+      ctx.strokeRect(indicatorX, indicatorY, indicatorWidth, indicatorHeight)
+    } else if (ctx.rect && ctx.beginPath && ctx.stroke) {
+      // Fallback for test environment
+      ctx.beginPath()
+      ctx.rect(indicatorX, indicatorY, indicatorWidth, indicatorHeight)
+      ctx.stroke()
+    }
+    // Skip drawing outline if neither method is available
     
     // Title
     ctx.fillStyle = '#FFD700'

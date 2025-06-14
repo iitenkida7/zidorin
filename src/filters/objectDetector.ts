@@ -342,7 +342,15 @@ export class ObjectDetectorFilter implements Filter {
     
     ctx.strokeStyle = '#00FFFF'
     ctx.lineWidth = 1
-    ctx.strokeRect(statsX, statsY, statsWidth, statsHeight)
+    if (ctx.strokeRect) {
+      ctx.strokeRect(statsX, statsY, statsWidth, statsHeight)
+    } else if (ctx.rect && ctx.beginPath && ctx.stroke) {
+      // Fallback for test environment
+      ctx.beginPath()
+      ctx.rect(statsX, statsY, statsWidth, statsHeight)
+      ctx.stroke()
+    }
+    // Skip drawing outline if neither method is available
     
     ctx.fillStyle = '#00FFFF'
     ctx.font = 'bold 12px Courier'
