@@ -2,6 +2,15 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { modelLoader } from '@/utils/modelLoader'
 
 // TensorFlow.jsのモックを設定
+vi.mock('@tensorflow/tfjs', () => ({
+  ready: vi.fn().mockResolvedValue(undefined),
+  getBackend: vi.fn().mockReturnValue('webgl'),
+  setBackend: vi.fn().mockResolvedValue(undefined),
+  env: vi.fn(() => ({
+    set: vi.fn()
+  }))
+}))
+
 vi.mock('@tensorflow-models/face-landmarks-detection', () => ({
   createDetector: vi.fn(),
   SupportedModels: {
@@ -29,6 +38,8 @@ describe('ModelLoader', () => {
     ;(modelLoader as any).faceDetectorPromise = null
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(modelLoader as any).segmenterPromise = null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(modelLoader as any).initialized = false
   })
 
   it('should load face detector', async () => {
