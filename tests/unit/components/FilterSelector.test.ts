@@ -1,13 +1,20 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { FilterSelector } from '@/components/FilterSelector'
 
 // Mockの設定
 vi.mock('@/filters', () => ({
   getAllFilters: vi.fn(() => [
-    { id: 'none', name: 'なし', icon: '🎨', apply: vi.fn() },
-    { id: 'monochrome', name: 'モノクロ', icon: '🖤', apply: vi.fn() },
-    { id: 'vivid', name: 'ビビッド', icon: '🌈', apply: vi.fn() },
-  ])
+    { id: 'none', name: 'なし', icon: '🎨', category: 'basic', apply: vi.fn() },
+    { id: 'monochrome', name: 'モノクロ', icon: '🖤', category: 'color', apply: vi.fn() },
+    { id: 'vivid', name: 'ビビッド', icon: '🌈', category: 'color', apply: vi.fn() },
+  ]),
+  getCategorizedFilters: vi.fn(() => new Map([
+    ['basic', [{ id: 'none', name: 'なし', icon: '🎨', category: 'basic', apply: vi.fn() }]],
+    ['color', [
+      { id: 'monochrome', name: 'モノクロ', icon: '🖤', category: 'color', apply: vi.fn() },
+      { id: 'vivid', name: 'ビビッド', icon: '🌈', category: 'color', apply: vi.fn() }
+    ]]
+  ]))
 }))
 
 describe('FilterSelector', () => {
@@ -83,6 +90,6 @@ describe('FilterSelector', () => {
     
     // 選択状態のクラスが適用されていることを確認
     const updatedButton = container.querySelector('[data-filter-id=monochrome]') as HTMLElement
-    expect(updatedButton.className).toContain('border-pink-500')
+    expect(updatedButton.className).toContain('border-pink-400')
   })
 })

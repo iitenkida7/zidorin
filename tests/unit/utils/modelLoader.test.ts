@@ -26,7 +26,9 @@ describe('ModelLoader', () => {
       segmenter: null
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(modelLoader as any).loadingPromises = new Map()
+    ;(modelLoader as any).faceDetectorPromise = null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(modelLoader as any).segmenterPromise = null
   })
 
   it('should load face detector', async () => {
