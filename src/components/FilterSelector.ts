@@ -17,24 +17,22 @@ export class FilterSelector {
     const filters = getAllFilters()
     
     this.container.innerHTML = `
-      <div class="bg-white rounded-2xl shadow-lg h-full flex flex-col min-w-0">
-        <div class="p-2 sm:p-3 flex-shrink-0 border-b border-gray-100">
-          <h2 class="text-xs sm:text-sm font-bold text-pink-600 text-center">フィルターを選ぼう！</h2>
-        </div>
-        <div class="flex-1 overflow-y-auto p-1 md:p-2">
-          <div class="grid grid-cols-6 md:grid-cols-8 gap-1 md:gap-2">
+      <div class="bg-white rounded-2xl shadow-lg">
+        <div class="p-2">
+          <h2 class="text-xs font-bold text-pink-600 text-center mb-2">フィルターを選ぼう！</h2>
+          <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1">
             ${filters.map(filter => `
               <button
                 data-filter-id="${filter.id}"
-                class="filter-button relative aspect-square rounded-lg border transition-all duration-200 min-w-0 ${
+                class="filter-button relative aspect-square rounded-lg border transition-all duration-200 ${
                   filter.id === this.selectedFilter
                     ? 'border-pink-500 scale-105 shadow-lg border-2'
                     : 'border-gray-200 hover:border-pink-300 hover:scale-105 border'
                 }"
               >
-                <div class="absolute inset-0 flex flex-col items-center justify-center p-0.5 md:p-1 overflow-hidden">
-                  <span class="text-sm md:text-lg flex-shrink-0">${filter.icon}</span>
-                  <span class="text-xs text-gray-700 leading-tight truncate w-full text-center hidden md:block">${filter.name}</span>
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-0.5 overflow-hidden">
+                  <span class="text-sm flex-shrink-0">${filter.icon}</span>
+                  <span class="text-xs text-gray-700 leading-tight truncate w-full text-center hidden sm:block">${filter.name}</span>
                 </div>
               </button>
             `).join('')}

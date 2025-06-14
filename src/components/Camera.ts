@@ -20,17 +20,17 @@ export class Camera {
     if (!this.container) return
     
     this.container.innerHTML = `
-      <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-white">
+      <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-white h-full">
         <video
           id="camera-video"
-          class="w-full h-auto"
+          class="w-full h-full object-cover"
           autoplay
           playsinline
           style="display: none;"
         ></video>
         <canvas
           id="camera-canvas"
-          class="w-full h-auto"
+          class="w-full h-full object-cover"
         ></canvas>
         <div id="camera-loading" class="absolute inset-0 flex items-center justify-center bg-pastel-blue">
           <div class="text-center">
@@ -38,6 +38,7 @@ export class Camera {
             <p class="mt-4 text-pink-600">カメラを起動中...</p>
           </div>
         </div>
+        <div id="controls-container" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10"></div>
       </div>
     `
     
