@@ -59,10 +59,21 @@ export class Camera {
       
       if (this.video) {
         this.video.srcObject = this.stream
-        this.video.onloadedmetadata = () => {
-          this.setupCanvas()
-          this.hideLoading()
-          this.startRendering()
+        
+        // iOS Safari requires explicit play() call
+        this.video.onloadedmetadata = async () => {
+          try {
+            await this.video!.play()
+            this.setupCanvas()
+            this.hideLoading()
+            // Add small delay for iOS stability
+            setTimeout(() => {
+              this.startRendering()
+            }, 100)
+          } catch (playError) {
+            console.error('Video play failed:', playError)
+            this.showError()
+          }
         }
       }
     } catch (error) {
@@ -99,24 +110,39 @@ export class Camera {
   }
   
   private startRendering(): void {
-    const render = async () => {
+    let lastFrameTime = 0
+    const targetFPS = 30 // Limit FPS for better iOS performance
+    const frameInterval = 1000 / targetFPS
+    
+    const render = async (currentTime: number) => {
       if (!this.video || !this.canvas || !this.ctx) return
       
-      this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
+      // Throttle rendering for iOS performance
+      if (currentTime - lastFrameTime < frameInterval) {
+        this.animationId = requestAnimationFrame(render)
+        return
+      }
       
-      const filter = getFilter(this.currentFilter)
-      if (filter) {
-        try {
-          await filter.apply(this.ctx, this.canvas.width, this.canvas.height)
-        } catch (error) {
-          console.error('Filter application failed:', error)
+      lastFrameTime = currentTime
+      
+      // Check if video is ready
+      if (this.video.readyState >= this.video.HAVE_CURRENT_DATA) {
+        this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
+        
+        const filter = getFilter(this.currentFilter)
+        if (filter) {
+          try {
+            await filter.apply(this.ctx, this.canvas.width, this.canvas.height)
+          } catch (error) {
+            console.error('Filter application failed:', error)
+          }
         }
       }
       
       this.animationId = requestAnimationFrame(render)
     }
     
-    render()
+    this.animationId = requestAnimationFrame(render)
   }
   
   setFilter(filterId: FilterId): void {
