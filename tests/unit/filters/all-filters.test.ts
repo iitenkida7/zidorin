@@ -129,8 +129,8 @@ describe('All Filters', () => {
   describe('Filter Count', () => {
     it('should have the expected number of filters', () => {
       const allFilters = getAllFilters()
-      // Should have 45 total filters (including 'none')
-      expect(allFilters.length).toBe(45)
+      // Should have 46 total filters (including 'none' + spy filter)
+      expect(allFilters.length).toBe(46)
     })
   })
 })

@@ -4,8 +4,10 @@ import { getFilter } from '../filters'
 export class Camera {
   private container: HTMLElement | null = null
   private video: HTMLVideoElement | null = null
-  private canvas: HTMLCanvasElement | null = null
-  private ctx: CanvasRenderingContext2D | null = null
+  private displayCanvas: HTMLCanvasElement | null = null // For preview display
+  private captureCanvas: HTMLCanvasElement | null = null // For photo capture
+  private displayCtx: CanvasRenderingContext2D | null = null
+  private captureCtx: CanvasRenderingContext2D | null = null
   private stream: MediaStream | null = null
   private currentFilter: FilterId = 'none'
   private animationId: number | null = null
@@ -31,8 +33,13 @@ export class Camera {
           style="display: none;"
         ></video>
         <canvas
-          id="camera-canvas"
+          id="camera-display-canvas"
           class="w-full h-full object-cover"
+        ></canvas>
+        <canvas
+          id="camera-capture-canvas"
+          class="w-full h-full object-cover"
+          style="display: none;"
         ></canvas>
         <div id="camera-loading" class="absolute inset-0 flex items-center justify-center bg-pastel-blue">
           <div class="text-center">
@@ -52,8 +59,10 @@ export class Camera {
     `
     
     this.video = document.getElementById('camera-video') as HTMLVideoElement
-    this.canvas = document.getElementById('camera-canvas') as HTMLCanvasElement
-    this.ctx = this.canvas.getContext('2d')
+    this.displayCanvas = document.getElementById('camera-display-canvas') as HTMLCanvasElement
+    this.captureCanvas = document.getElementById('camera-capture-canvas') as HTMLCanvasElement
+    this.displayCtx = this.displayCanvas.getContext('2d')
+    this.captureCtx = this.captureCanvas.getContext('2d')
     this.setupCameraSwitchButton()
   }
   
@@ -95,10 +104,13 @@ export class Camera {
   }
   
   private setupCanvas(): void {
-    if (!this.video || !this.canvas) return
+    if (!this.video || !this.displayCanvas || !this.captureCanvas) return
     
-    this.canvas.width = this.video.videoWidth
-    this.canvas.height = this.video.videoHeight
+    // Setup both canvases with same dimensions
+    this.displayCanvas.width = this.video.videoWidth
+    this.displayCanvas.height = this.video.videoHeight
+    this.captureCanvas.width = this.video.videoWidth
+    this.captureCanvas.height = this.video.videoHeight
   }
   
   private hideLoading(): void {
@@ -127,7 +139,7 @@ export class Camera {
     const frameInterval = 1000 / targetFPS
     
     const render = async (currentTime: number) => {
-      if (!this.video || !this.canvas || !this.ctx) return
+      if (!this.video || !this.displayCanvas || !this.captureCanvas || !this.displayCtx || !this.captureCtx) return
       
       // Throttle rendering for iOS performance
       if (currentTime - lastFrameTime < frameInterval) {
@@ -139,28 +151,9 @@ export class Camera {
       
       // Check if video is ready
       if (this.video.readyState >= this.video.HAVE_CURRENT_DATA) {
-        // Save context state
-        this.ctx.save()
-        
-        // Mirror the canvas for front-facing camera
-        if (this.currentFacingMode === 'user') {
-          this.ctx.scale(-1, 1)
-          this.ctx.drawImage(this.video, -this.canvas.width, 0, this.canvas.width, this.canvas.height)
-        } else {
-          this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
-        }
-        
-        // Restore context state before applying filters
-        this.ctx.restore()
-        
-        const filter = getFilter(this.currentFilter)
-        if (filter) {
-          try {
-            await filter.apply(this.ctx, this.canvas.width, this.canvas.height)
-          } catch (error) {
-            console.error('Filter application failed:', error)
-          }
-        }
+        // Draw to both canvases
+        this.drawToCanvas(this.displayCtx, this.displayCanvas, true) // For display with filter
+        this.drawToCanvas(this.captureCtx, this.captureCanvas, false) // For capture without spy filter
       }
       
       this.animationId = requestAnimationFrame(render)
@@ -168,15 +161,48 @@ export class Camera {
     
     this.animationId = requestAnimationFrame(render)
   }
+
+  private async drawToCanvas(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, applySpyEffect: boolean): Promise<void> {
+    if (!this.video) return
+    
+    // Save context state
+    ctx.save()
+    
+    // Mirror the canvas for front-facing camera
+    if (this.currentFacingMode === 'user') {
+      ctx.scale(-1, 1)
+      ctx.drawImage(this.video, -canvas.width, 0, canvas.width, canvas.height)
+    } else {
+      ctx.drawImage(this.video, 0, 0, canvas.width, canvas.height)
+    }
+    
+    // Restore context state before applying filters
+    ctx.restore()
+    
+    const filter = getFilter(this.currentFilter)
+    if (filter) {
+      try {
+        // For spy camera: only apply spy effect to display canvas
+        if (this.currentFilter === 'spy' && !applySpyEffect) {
+          // Skip spy filter for capture canvas
+          return
+        }
+        await filter.apply(ctx, canvas.width, canvas.height)
+      } catch (error) {
+        console.error('Filter application failed:', error)
+      }
+    }
+  }
   
   setFilter(filterId: FilterId): void {
     this.currentFilter = filterId
   }
   
   capture(): string | null {
-    if (!this.canvas) return null
+    if (!this.captureCanvas) return null
     
-    return this.canvas.toDataURL('image/png')
+    // Always capture from the capture canvas (without spy effect)
+    return this.captureCanvas.toDataURL('image/png')
   }
   
   private async checkAvailableCameras(): Promise<void> {

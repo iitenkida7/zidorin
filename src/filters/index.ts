@@ -53,6 +53,7 @@ import { ColorPaletteFilter } from './colorPalette'
 import { MotionTrackerFilter } from './motionTracker'
 import { ObjectDetectorFilter } from './objectDetector'
 import { AIArtistFilter } from './aiArtist'
+import { SpyFilter } from './spy'
 
 const filters: Filter[] = [
   {
@@ -117,6 +118,7 @@ const filters: Filter[] = [
   new MotionTrackerFilter(),
   new ObjectDetectorFilter(),
   new AIArtistFilter(),
+  new SpyFilter(),
 ]
 
 export function getFilter(id: FilterId): Filter | undefined {

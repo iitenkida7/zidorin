@@ -18,7 +18,7 @@ export type FilterId = 'none' | 'monochrome' | 'vivid' | 'cloud' | 'sparkle' | '
   // New background filters
   'galaxy' | 'underwater' | 'citynight' | 'forestmagic' | 'retrowave' |
   // New special filters
-  'emotion' | 'colorpalette' | 'motiontracker' | 'objectdetector' | 'aiartist'
+  'emotion' | 'colorpalette' | 'motiontracker' | 'objectdetector' | 'aiartist' | 'spy'
 
 export const categoryInfo: Record<FilterCategory, { name: string; icon: string }> = {
   basic: { name: 'きほん', icon: '🎨' },
