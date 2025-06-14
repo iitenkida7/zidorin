@@ -10,7 +10,7 @@ export interface Filter {
 
 export type FilterId = 'none' | 'monochrome' | 'vivid' | 'cloud' | 'sparkle' | 'dogface' | 'eyesemoji' | 'makeup' | 'background' | 'agegender' |
   // New color filters
-  'rainbow' | 'neon' | 'vintage' | 'thermal' | 'cyberpunk' |
+  'rainbow' | 'neon' | 'vintage' | 'thermal' | 'cyberpunk' | 'pastel' | 'sepia' | 'cool' | 'warm' | 'dreamy' | 'sunset' | 'ocean' | 'cherry' | 'emerald' | 'lavender' |
   // New decorate filters  
   'confetti' | 'sakura' | 'matrix' | 'bubble' | 'snow' |
   // New face filters

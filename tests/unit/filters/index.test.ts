@@ -13,7 +13,7 @@ describe('Filters Index', () => {
   it('should return all available filters', () => {
     const filters = getAllFilters()
     
-    expect(filters).toHaveLength(35) // 合計35個のフィルター (5 original + 25 new + 5 base categories)
+    expect(filters).toHaveLength(45) // 合計45個のフィルター (9 original + 35 new + 1 none filter)
     
     // 基本フィルターのIDをチェック
     const filterIds = filters.map(f => f.id)

@@ -15,6 +15,16 @@ import { NeonFilter } from './neon'
 import { VintageFilter } from './vintage'
 import { ThermalFilter } from './thermal'
 import { CyberpunkFilter } from './cyberpunk'
+import { PastelFilter } from './pastel'
+import { SepiaFilter } from './sepia'
+import { CoolFilter } from './cool'
+import { WarmFilter } from './warm'
+import { DreamyFilter } from './dreamy'
+import { SunsetFilter } from './sunset'
+import { OceanFilter } from './ocean'
+import { CherryFilter } from './cherry'
+import { EmeraldFilter } from './emerald'
+import { LavenderFilter } from './lavender'
 
 // New decorate filters
 import { ConfettiFilter } from './confetti'
@@ -69,6 +79,16 @@ const filters: Filter[] = [
   new VintageFilter(),
   new ThermalFilter(),
   new CyberpunkFilter(),
+  new PastelFilter(),
+  new SepiaFilter(),
+  new CoolFilter(),
+  new WarmFilter(),
+  new DreamyFilter(),
+  new SunsetFilter(),
+  new OceanFilter(),
+  new CherryFilter(),
+  new EmeraldFilter(),
+  new LavenderFilter(),
   
   // New decorate filters
   new ConfettiFilter(),
