@@ -25,9 +25,9 @@ describe('CloudFilter', () => {
     await filter.apply(mockCtx, width, height)
 
     // 雲のエフェクトが描画されることを確認
-    expect(mockCtx.save).toHaveBeenCalled()
-    expect(mockCtx.restore).toHaveBeenCalled()
-    expect(mockCtx.fillRect).toHaveBeenCalled()
+    expect(mockCtx.getImageData).toHaveBeenCalled()
+    expect(mockCtx.putImageData).toHaveBeenCalled()
+    expect(mockCtx.arc).toHaveBeenCalled()
   })
 
   it('should use white color for clouds', async () => {
