@@ -1,16 +1,19 @@
 import { Camera } from './components/Camera'
 import { FilterSelector } from './components/FilterSelector'
 import { Controls } from './components/Controls'
+import { Preview } from './components/Preview'
 
 export class App {
   private camera: Camera
   private filterSelector: FilterSelector
   private controls: Controls
+  private preview: Preview
   
   constructor(private container: HTMLElement) {
     this.camera = new Camera()
     this.filterSelector = new FilterSelector()
     this.controls = new Controls()
+    this.preview = new Preview()
     
     this.init()
   }
@@ -34,16 +37,19 @@ export class App {
           </div>
         </main>
       </div>
+      <div id="preview-container"></div>
     `
     
     const cameraContainer = document.getElementById('camera-container')
     const filterContainer = document.getElementById('filter-container')
     const controlsContainer = document.getElementById('controls-container')
+    const previewContainer = document.getElementById('preview-container')
     
-    if (cameraContainer && filterContainer && controlsContainer) {
+    if (cameraContainer && filterContainer && controlsContainer && previewContainer) {
       this.camera.mount(cameraContainer)
       this.filterSelector.mount(filterContainer)
       this.controls.mount(controlsContainer)
+      this.preview.mount(previewContainer)
       
       this.setupEventListeners()
     }
@@ -55,7 +61,18 @@ export class App {
     })
     
     this.controls.onCapture(() => {
-      this.camera.capture()
+      const imageData = this.camera.capture()
+      if (imageData) {
+        this.preview.show(imageData)
+      }
+    })
+    
+    this.preview.onRetake(() => {
+      // プレビューを閉じるだけで、カメラは既に動作中
+    })
+    
+    this.preview.onSave(() => {
+      // 保存後の処理（必要に応じて）
     })
   }
 }

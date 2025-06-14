@@ -118,13 +118,10 @@ export class Camera {
     this.currentFilter = filterId
   }
   
-  capture(): void {
-    if (!this.canvas) return
+  capture(): string | null {
+    if (!this.canvas) return null
     
-    const link = document.createElement('a')
-    link.download = `zidorin_${Date.now()}.png`
-    link.href = this.canvas.toDataURL()
-    link.click()
+    return this.canvas.toDataURL('image/png')
   }
   
   destroy(): void {
