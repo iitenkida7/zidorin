@@ -17,24 +17,28 @@ export class FilterSelector {
     const filters = getAllFilters()
     
     this.container.innerHTML = `
-      <div class="bg-white rounded-2xl shadow-lg p-2">
-        <h2 class="text-sm font-bold text-pink-600 mb-2 text-center">フィルターを選ぼう！</h2>
-        <div class="grid grid-cols-6 sm:grid-cols-10 gap-2">
-          ${filters.map(filter => `
-            <button
-              data-filter-id="${filter.id}"
-              class="filter-button relative aspect-square rounded-lg border-2 transition-all duration-200 ${
-                filter.id === this.selectedFilter
-                  ? 'border-pink-500 scale-110 shadow-lg'
-                  : 'border-gray-200 hover:border-pink-300 hover:scale-105'
-              }"
-            >
-              <div class="absolute inset-0 flex flex-col items-center justify-center p-1">
-                <span class="text-sm mb-0.5">${filter.icon}</span>
-                <span class="text-xs text-gray-700">${filter.name}</span>
-              </div>
-            </button>
-          `).join('')}
+      <div class="bg-white rounded-2xl shadow-lg h-full flex flex-col min-w-0">
+        <div class="p-2 sm:p-3 flex-shrink-0 border-b border-gray-100">
+          <h2 class="text-xs sm:text-sm font-bold text-pink-600 text-center">フィルターを選ぼう！</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-1 md:p-2">
+          <div class="grid grid-cols-6 md:grid-cols-8 gap-1 md:gap-2">
+            ${filters.map(filter => `
+              <button
+                data-filter-id="${filter.id}"
+                class="filter-button relative aspect-square rounded-lg border transition-all duration-200 min-w-0 ${
+                  filter.id === this.selectedFilter
+                    ? 'border-pink-500 scale-105 shadow-lg border-2'
+                    : 'border-gray-200 hover:border-pink-300 hover:scale-105 border'
+                }"
+              >
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-0.5 md:p-1 overflow-hidden">
+                  <span class="text-sm md:text-lg flex-shrink-0">${filter.icon}</span>
+                  <span class="text-xs text-gray-700 leading-tight truncate w-full text-center hidden md:block">${filter.name}</span>
+                </div>
+              </button>
+            `).join('')}
+          </div>
         </div>
       </div>
     `
