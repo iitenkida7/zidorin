@@ -20,7 +20,7 @@ export class UnderwaterBackgroundFilter implements Filter {
     if (!this.segmenter) {
       this.isLoading = true
       try {
-        this.segmenter = await modelLoader.getBodySegmenter()
+        this.segmenter = await modelLoader.getSegmenter()
       } catch (error) {
         console.error('Body segmenter loading failed:', error)
         this.isLoading = false
@@ -47,6 +47,12 @@ export class UnderwaterBackgroundFilter implements Filter {
       if (segmentation && segmentation.length > 0) {
         const mask = segmentation[0].mask
         const imageData = ctx.getImageData(0, 0, width, height)
+        
+        // Get mask data
+        const maskData = mask.getUnderlyingCanvas ?
+          mask.getUnderlyingCanvas().getContext('2d')!.getImageData(0, 0, width, height) :
+          await mask.toImageData!()
+        
         const backgroundData = ctx.createImageData(width, height)
         
         for (let y = 0; y < height; y++) {
@@ -54,7 +60,9 @@ export class UnderwaterBackgroundFilter implements Filter {
             const i = y * width + x
             const pixelIndex = i * 4
             
-            if (mask.getValueAt && mask.getValueAt(x, y) === 0) {
+            // Check if pixel is background (mask value is 0)
+            const maskValue = maskData.data[pixelIndex] // Use red channel as mask
+            if (maskValue < 128) { // Background pixel
               // Background pixel - create underwater effect
               const depth = y / height
               const wave = Math.sin(x * 0.02 + this.time * 2) * 10 + Math.sin(x * 0.03 + this.time * 1.5) * 5

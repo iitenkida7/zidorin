@@ -16,20 +16,19 @@ class ModelLoader {
     segmenter: null
   }
   
-  private loadingPromises: Map<string, Promise<FaceDetector | BodySegmenter>> = new Map()
+  private faceDetectorPromise: Promise<FaceDetector> | null = null
+  private segmenterPromise: Promise<BodySegmenter> | null = null
   
   async getFaceDetector(): Promise<FaceDetector> {
     if (this.models.faceDetector) {
       return this.models.faceDetector
     }
     
-    const key = 'faceDetector'
-    if (!this.loadingPromises.has(key)) {
-      const promise = this.loadFaceDetector()
-      this.loadingPromises.set(key, promise)
+    if (!this.faceDetectorPromise) {
+      this.faceDetectorPromise = this.loadFaceDetector()
     }
     
-    return this.loadingPromises.get(key)!
+    return this.faceDetectorPromise
   }
   
   private async loadFaceDetector(): Promise<FaceDetector> {
@@ -50,13 +49,11 @@ class ModelLoader {
       return this.models.segmenter
     }
     
-    const key = 'segmenter'
-    if (!this.loadingPromises.has(key)) {
-      const promise = this.loadSegmenter()
-      this.loadingPromises.set(key, promise)
+    if (!this.segmenterPromise) {
+      this.segmenterPromise = this.loadSegmenter()
     }
     
-    return this.loadingPromises.get(key)!
+    return this.segmenterPromise
   }
   
   private async loadSegmenter(): Promise<BodySegmenter> {

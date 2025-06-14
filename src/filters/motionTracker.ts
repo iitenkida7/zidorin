@@ -175,7 +175,7 @@ export class MotionTrackerFilter implements Filter {
     ctx.restore()
   }
   
-  private drawMotionHUD(ctx: CanvasRenderingContext2D, width: number, height: number): void {
+  private drawMotionHUD(ctx: CanvasRenderingContext2D, _width: number, _height: number): void {
     const hudX = 20
     const hudY = 20
     const hudWidth = 200

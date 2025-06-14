@@ -12,7 +12,7 @@ export class MagicCircleFilter implements Filter {
   private rotation = 0
   private pulseTime = 0
   
-  async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
+  async apply(ctx: CanvasRenderingContext2D, _width: number, _height: number): Promise<void> {
     this.rotation += 1
     this.pulseTime += 0.05
     

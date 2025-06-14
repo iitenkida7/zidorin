@@ -11,7 +11,7 @@ export class AngelHaloFilter implements Filter {
   private isLoading = false
   private haloGlow = 0
   
-  async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
+  async apply(ctx: CanvasRenderingContext2D, _width: number, _height: number): Promise<void> {
     this.haloGlow += 0.1
     
     if (this.isLoading) return

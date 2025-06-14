@@ -58,7 +58,7 @@ export class BackgroundReplaceFilter implements Filter {
         const mask = segmentation[0].mask
         const maskData = mask.getUnderlyingCanvas ?
           mask.getUnderlyingCanvas().getContext('2d')!.getImageData(0, 0, width, height) :
-          await mask.toImageData()
+          await mask.toImageData!()
         
         // 背景画像を描画
         if (this.backgroundImage) {

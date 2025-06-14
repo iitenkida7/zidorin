@@ -11,7 +11,7 @@ export class CatEarsFilter implements Filter {
   private isLoading = false
   private earTwitch = 0
   
-  async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
+  async apply(ctx: CanvasRenderingContext2D, _width: number, _height: number): Promise<void> {
     this.earTwitch += 0.05
     
     if (this.isLoading) return

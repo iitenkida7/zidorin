@@ -11,7 +11,7 @@ export class CrownFilter implements Filter {
   private isLoading = false
   private sparkleTime = 0
   
-  async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
+  async apply(ctx: CanvasRenderingContext2D, _width: number, _height: number): Promise<void> {
     this.sparkleTime += 0.1
     
     if (this.isLoading) return

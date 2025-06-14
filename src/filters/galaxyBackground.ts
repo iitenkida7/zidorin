@@ -20,7 +20,7 @@ export class GalaxyBackgroundFilter implements Filter {
     if (!this.segmenter) {
       this.isLoading = true
       try {
-        this.segmenter = await modelLoader.getBodySegmenter()
+        this.segmenter = await modelLoader.getSegmenter()
       } catch (error) {
         console.error('Body segmenter loading failed:', error)
         this.isLoading = false
@@ -50,6 +50,11 @@ export class GalaxyBackgroundFilter implements Filter {
         const mask = segmentation[0].mask
         const imageData = ctx.getImageData(0, 0, width, height)
         
+        // Get mask data
+        const maskData = mask.getUnderlyingCanvas ?
+          mask.getUnderlyingCanvas().getContext('2d')!.getImageData(0, 0, width, height) :
+          await mask.toImageData!()
+        
         // Create galaxy background
         const backgroundData = ctx.createImageData(width, height)
         
@@ -58,7 +63,9 @@ export class GalaxyBackgroundFilter implements Filter {
             const i = y * width + x
             const pixelIndex = i * 4
             
-            if (mask.getValueAt && mask.getValueAt(x, y) === 0) {
+            // Check if pixel is background (mask value is 0)
+            const maskValue = maskData.data[pixelIndex] // Use red channel as mask
+            if (maskValue < 128) { // Background pixel
               // Background pixel - draw galaxy
               const centerX = width / 2
               const centerY = height / 2

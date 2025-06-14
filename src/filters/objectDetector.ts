@@ -234,8 +234,6 @@ export class ObjectDetectorFilter implements Filter {
     
     for (let y = 1; y < height - 1; y++) {
       for (let x = 1; x < width - 1; x++) {
-        const idx = (y * width + x) * 4
-        
         // Simple Sobel edge detection
         const tl = this.getGrayscale(data, (y - 1) * width + (x - 1))
         const tm = this.getGrayscale(data, (y - 1) * width + x)

@@ -17,7 +17,7 @@ export class AIArtistFilter implements Filter {
   ]
   private currentStyleIndex = 0
   private styleChangeTimer = 0
-  private brushStrokes: Array<{ x: number; y: number; color: string; size: number; angle: number; opacity: number }> = []
+  // private brushStrokes: Array<{ x: number; y: number; color: string; size: number; angle: number; opacity: number }> = []
   
   apply(ctx: CanvasRenderingContext2D, width: number, height: number): void {
     this.styleChangeTimer++
@@ -25,7 +25,7 @@ export class AIArtistFilter implements Filter {
     // Change style every 300 frames (about 10 seconds at 30fps)
     if (this.styleChangeTimer % 300 === 0) {
       this.currentStyleIndex = (this.currentStyleIndex + 1) % this.artStyles.length
-      this.brushStrokes = [] // Clear brush strokes when changing style
+      // this.brushStrokes = [] // Clear brush strokes when changing style
     }
     
     const currentStyle = this.artStyles[this.currentStyleIndex]
@@ -40,7 +40,7 @@ export class AIArtistFilter implements Filter {
   private picassoStyle(ctx: CanvasRenderingContext2D, width: number, height: number): void {
     // Cubist fragmentation effect
     const imageData = ctx.getImageData(0, 0, width, height)
-    const newImageData = ctx.createImageData(width, height)
+    // const newImageData = ctx.createImageData(width, height)
     
     // Create angular fragments
     for (let y = 0; y < height; y += 20) {
@@ -341,7 +341,7 @@ export class AIArtistFilter implements Filter {
     ctx.restore()
   }
   
-  private drawStyleIndicator(ctx: CanvasRenderingContext2D, width: number, height: number, styleName: string): void {
+  private drawStyleIndicator(ctx: CanvasRenderingContext2D, _width: number, height: number, styleName: string): void {
     const indicatorX = 20
     const indicatorY = height - 60
     const indicatorWidth = 180

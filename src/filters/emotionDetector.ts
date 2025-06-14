@@ -54,7 +54,7 @@ export class EmotionDetectorFilter implements Filter {
       })
       
       // Draw emotion indicators
-      this.detectedEmotions.forEach((emotion, index) => {
+      this.detectedEmotions.forEach((emotion, _index) => {
         const age = (Date.now() - emotion.time) / 3000
         const alpha = Math.max(0, 1 - age)
         const yOffset = age * 50 // Float upward
@@ -116,7 +116,7 @@ export class EmotionDetectorFilter implements Filter {
     }
   }
   
-  private analyzeEmotion(aspectRatio: number, width: number, height: number): { name: string; confidence: number; color: string } {
+  private analyzeEmotion(_aspectRatio: number, _width: number, _height: number): { name: string; confidence: number; color: string } {
     // Simplified emotion detection based on face geometry
     // In a real implementation, you'd use a proper emotion detection model
     

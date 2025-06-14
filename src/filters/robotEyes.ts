@@ -11,7 +11,7 @@ export class RobotEyesFilter implements Filter {
   private isLoading = false
   private scanLine = 0
   
-  async apply(ctx: CanvasRenderingContext2D, width: number, height: number): Promise<void> {
+  async apply(ctx: CanvasRenderingContext2D, _width: number, _height: number): Promise<void> {
     this.scanLine += 3
     
     if (this.isLoading) return
@@ -34,9 +34,9 @@ export class RobotEyesFilter implements Filter {
       
       faces.forEach(face => {
         if (face.keypoints) {
-          // Find eye positions
-          const leftEye = face.keypoints.find(kp => kp.name === 'leftEye')
-          const rightEye = face.keypoints.find(kp => kp.name === 'rightEye')
+          // Find eye positions (using array indices)
+          const leftEye = face.keypoints[0] // Left eye
+          const rightEye = face.keypoints[1] // Right eye
           
           if (leftEye && rightEye) {
             [leftEye, rightEye].forEach(eye => {

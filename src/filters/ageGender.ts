@@ -91,12 +91,12 @@ export class AgeGenderFilter implements Filter {
   private estimateAgeGender(keypoints: Face['keypoints'], _imageData: ImageData, _width: number, _height: number): {age: number, gender: string} {
     // 簡易的な推定ロジック（実際のAIモデルの代替）
     
-    // 顔の特徴点から基本的な測定値を計算
-    const leftEye = keypoints.find(p => p.name === 'leftEye')
-    const rightEye = keypoints.find(p => p.name === 'rightEye')
-    const noseTip = keypoints.find(p => p.name === 'noseTip')
-    const leftMouth = keypoints.find(p => p.name === 'leftMouth')
-    const rightMouth = keypoints.find(p => p.name === 'rightMouth')
+    // 顔の特徴点から基本的な測定値を計算（インデックスベースでアクセス）
+    const leftEye = keypoints[0] // 左目
+    const rightEye = keypoints[1] // 右目
+    const noseTip = keypoints[2] // 鼻先
+    const leftMouth = keypoints[3] // 口の左
+    const rightMouth = keypoints[4] // 口の右
     
     if (!leftEye || !rightEye || !noseTip || !leftMouth || !rightMouth) {
       return { age: 25, gender: 'female' }
